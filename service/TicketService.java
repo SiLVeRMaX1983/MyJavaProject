@@ -7,10 +7,7 @@ import model.Ticket;
 import model.TicketStatus;
 
 public class TicketService {
-
-
     private List<Ticket> tickets;
-
     private Random random;
 
     public TicketService(List<Ticket> tickets) {
@@ -18,14 +15,13 @@ public class TicketService {
         this.random = new Random();
     }
 
-    public List<Ticket> getAllTickets(){
+    public List<Ticket> getAllTickets() {
         return tickets;
     }
 
     public List<Ticket> getTicketsByStatus(TicketStatus status) {
         List<Ticket> result = new ArrayList<>();
-        for (int i = 0; i < tickets.size(); i++) {
-            Ticket t = tickets.get(i);
+        for (Ticket t : tickets) {
             if (t.getStatus() == status) {
                 result.add(t);
             }
@@ -33,39 +29,40 @@ public class TicketService {
         return result;
     }
 
-       public Ticket getRandomTicket() {
-        if (tickets == null || tickets.size() == 0) {
+    public Ticket getRandomTicket() {
+        if (tickets == null || tickets.isEmpty()) {
             System.out.println("Нет билетов!");
             return null;
-        } else {
-            int index = random.nextInt(tickets.size());
-            return tickets.get(index);
         }
+        int index = random.nextInt(tickets.size());
+        return tickets.get(index);
     }
-    
+
     public double getProgress() {
-        if (tickets == null || tickets.size() == 0) {
+        if (tickets == null || tickets.isEmpty()) {
             return 0;
         }
-
         int learned = 0;
-        for (int i = 0; i < tickets.size(); i++) {
-            if (tickets.get(i).getStatus() == TicketStatus.LEARNED) {
+        for (Ticket t : tickets) {
+            if (t.getStatus() == TicketStatus.LEARNED) {
                 learned++;
             }
         }
-        double percent = (double) learned / tickets.size() * 100;
-        return percent;
+        return (double) learned / tickets.size() * 100;
     }
 
-      public void updateStatus(Ticket ticket, TicketStatus newStatus) {
+    public void updateStatus(Ticket ticket, TicketStatus newStatus) {
         if (ticket != null) {
             ticket.setStatus(newStatus);
-        } 
-        else {
+        } else {
             System.out.println("вам повезло, пустой билет");
         }
     }
 
-
+    // Новая функция — получение вариантов ответов для вопроса
+   public List<String> getAnswerOptions(Ticket ticket, int optionsCount) {
+    List<String> options = new ArrayList<>(ticket.getOptions());
+    java.util.Collections.shuffle(options);
+    return options;
+}
 }

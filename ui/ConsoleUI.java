@@ -7,7 +7,6 @@ import model.TicketStatus;
 import service.TicketService;
 
 public class ConsoleUI {
-
     private TicketService ticketService;
 
     public ConsoleUI(TicketService ticketService) {
@@ -15,12 +14,10 @@ public class ConsoleUI {
     }
 
     public void menu() {
-
         Scanner scanner = new Scanner(System.in);
         int choice = 0;
 
         while (choice != 5) {
-
             System.out.println("Выберите действие\n" +
                     "1. Случайный вопрос\n" +
                     "2. Все билеты\n" +
@@ -29,34 +26,51 @@ public class ConsoleUI {
                     "5. Выход");
 
             choice = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine(); // считывание остатка
 
             switch (choice) {
-
                 case 1:
-                    System.out.println("=== Случайный вопрос ===");
-                    Ticket random = ticketService.getRandomTicket();
+    System.out.println("=== Случайный вопрос ===");
+    Ticket random = ticketService.getRandomTicket();
 
-                    if (random == null) {
-                        System.out.println("Билетов нет!");
-                        break;
-                    }
+    if (random == null) {
+        System.out.println("Билетов нет!");
+        break;
+    }
 
-                    System.out.println("Вопрос: " + random.getQuestion());
-                    scanner.nextLine();
+    System.out.println("Вопрос: " + random.getQuestion());
 
-                    System.out.println("Ответ: " + random.getAnswer());
+    List<String> options = ticketService.getAnswerOptions(random, 3);
+    for (int i = 0; i < options.size(); i++) {
+        System.out.println((i + 1) + ") " + options.get(i));
+    }
 
-                    System.out.println("Статус билета?\n1. Выучено\n2. Повторить\n3. Пропустить");
-                    int stat = scanner.nextInt();
-                    scanner.nextLine();
+    int userAnswer = -1;
+    while (true) {
+        System.out.println("Введите номер вашего ответа:");
+        String input = scanner.nextLine();
+        try {
+            userAnswer = Integer.parseInt(input);
+            if (userAnswer >= 1 && userAnswer <= options.size()) {
+                break;
+            } else {
+                System.out.println("Пожалуйста, введите число от 1 до " + options.size());
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Неверный ввод. Введите число.");
+        }
+    }
 
-                    if (stat == 1)
-                        ticketService.updateStatus(random, TicketStatus.LEARNED);
-                    else if (stat == 2)
-                        ticketService.updateStatus(random, TicketStatus.REPEAT);
-
-                    break;
+    String selectedAnswer = options.get(userAnswer - 1);
+    if (selectedAnswer.equals(random.getAnswer())) {
+        System.out.println("Правильно!");
+        ticketService.updateStatus(random, TicketStatus.LEARNED);
+    } else {
+        System.out.println("Неправильно.");
+        System.out.println("Правильный ответ: " + random.getAnswer());
+        ticketService.updateStatus(random, TicketStatus.REPEAT);
+    }
+    break;
 
                 case 2:
                     System.out.println("=== Все билеты ===");
@@ -87,7 +101,6 @@ public class ConsoleUI {
                     System.out.println("Неверный ввод!");
             }
         }
-
         scanner.close();
     }
 }

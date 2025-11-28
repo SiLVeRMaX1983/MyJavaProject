@@ -1,31 +1,44 @@
 package model;
 
-public class Ticket {
-   private String question;
-   private String answer;
-   private TicketStatus status;
+import model.TicketStatus;
+import java.util.List;
 
-   public Ticket(String question, String answer){
+public class Ticket {
+    private String question;
+    private String answer;
+    private TicketStatus status;
+    private List<String> options;
+
+    public Ticket(String question, String answer) {
         this.question = question;
         this.answer = answer;
-        this.status = TicketStatus.NOT_STUDIED;
-   }
+        this.status = TicketStatus.REPEAT;
+    }
 
-   public String getQuestion(){
-      return question;
-   }
+    public Ticket(String question, String answer, List<String> options) {
+        this.question = question;
+        this.answer = answer;
+        this.options = options;
+        this.status = TicketStatus.REPEAT;
+    }
 
-   public String getAnswer(){
-      return answer;
-   }
+    public String getQuestion() {
+        return question;
+    }
 
-   public TicketStatus getStatus(){
-      return status;
-   }
+    public String getAnswer() {
+        return answer;
+    }
 
-   public void setStatus(TicketStatus status){
-      this.status = status;
-   }
+    public TicketStatus getStatus() {
+        return status;
+    }
 
+    public void setStatus(TicketStatus status) {
+        this.status = status;
+    }
+
+    public List<String> getOptions() {
+        return options;
+    }
 }
-
