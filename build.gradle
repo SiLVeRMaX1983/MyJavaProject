@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'application' // 👈 Добавьте этот плагин, если его нет — он нужен для задачи run
+}
+
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    archiveBaseName.set('MyCurseProject')
+    manifest {
+        attributes 'Main-Class': 'ui.App' 
+    }
+}
+
+application {
+    mainClass = 'ui.App'  
+}
+
+run {
+    standardInput = System.in
+}
+
+test {
+    useJUnitPlatform()
+}
