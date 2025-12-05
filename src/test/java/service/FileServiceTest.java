@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileServiceTest { 
 
     @Test 
-    void loadTickets_ShouldParseSingleTicketCorrectly(@TempDir Path tempDir) throws IOException {
+    void zagruzka_odbogo_bileta_i_ego_proverka(@TempDir Path tempDir) throws IOException {
         // разобрать один билет
 
-        Path testFile = tempDir.resolve("tickets.txt"); 
+        Path testFile = tempDir.resolve("tickets.txt"); //путь к файлу
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFile.toFile()))) {
            
             writer.write("What is 2+2?"); //вопрос и 3 варианта ответа
@@ -53,4 +53,47 @@ class FileServiceTest {
         assertEquals("5", options.get(1)); 
         assertEquals("3", options.get(2)); 
     }
+
+    @Test
+    void proverka_pystogo_file_i_vernut_pustoi_spisok() {//попытка чтения несуществующего или пустого файла
+        FileService fileService = new FileService();//создали экземпляр
+        List<Ticket> tickets = fileService.loadTickets("pystoi_file.txt");//вызвали метод к несуществующему файлу
+        assertNotNull(tickets);//проверка, вернул объект, а не null 
+        assertTrue(tickets.isEmpty());//проверяем на пустоту
+}
+
+@Test
+void sohranenieIZagruzkaBiletov_dolzhnyBytSovmestimy(@TempDir Path tempDir) throws IOException {
+    //создаём список билетов в памяти
+    List<String> options1 = List.of("Париж", "Лондон", "Берлин");
+    Ticket ticket1 = new Ticket("Столица Франции?", "Париж", options1);
+
+    List<String> options2 = List.of("4", "5", "6");
+    Ticket ticket2 = new Ticket("Сколько будет 2+2?", "4", options2);
+
+    List<Ticket> originalTickets = List.of(ticket1, ticket2);
+
+    //cохраняем билеты в файл
+    Path testFile = tempDir.resolve("roundtrip_tickets.txt");
+    FileService fileService = new FileService();
+    fileService.saveTickets(testFile.toString(), originalTickets);
+
+    //pагружаем билеты из того же файла
+    List<Ticket> loadedTickets = fileService.loadTickets(testFile.toString());
+
+    //количество билетов совпадает
+    assertEquals(2, loadedTickets.size());
+
+    //проверяем первый билет
+    Ticket loaded1 = loadedTickets.get(0);
+    assertEquals("Столица Франции?", loaded1.getQuestion());
+    assertEquals("Париж", loaded1.getAnswer());
+    assertEquals(List.of("Париж", "Лондон", "Берлин"), loaded1.getOptions());
+
+    //проверяем второй билет
+    Ticket loaded2 = loadedTickets.get(1);
+    assertEquals("Сколько будет 2+2?", loaded2.getQuestion());
+    assertEquals("4", loaded2.getAnswer());
+    assertEquals(List.of("4", "5", "6"), loaded2.getOptions()); 
+}
 }

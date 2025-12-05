@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="service.FileServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-12-04T12:41:34" hostname="SiLVeRWoLf" time="0.11">
+<testsuite name="service.FileServiceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-05T13:04:35" hostname="SiLVeRWoLf" time="0.123">
   <properties/>
-  <testcase name="loadTickets_ShouldParseSingleTicketCorrectly(Path)" classname="service.FileServiceTest" time="0.11"/>
-  <system-out><![CDATA[]]></system-out>
+  <testcase name="sohranenieIZagruzkaBiletov_dolzhnyBytSovmestimy(Path)" classname="service.FileServiceTest" time="0.107"/>
+  <testcase name="proverka_pystogo_file_i_vernut_pustoi_spisok()" classname="service.FileServiceTest" time="0.009"/>
+  <testcase name="zagruzka_odbogo_bileta_i_ego_proverka(Path)" classname="service.FileServiceTest" time="0.004"/>
+  <system-out><![CDATA[Ошибка чтения файла: pystoi_file.txt (No such file or directory)
+]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
