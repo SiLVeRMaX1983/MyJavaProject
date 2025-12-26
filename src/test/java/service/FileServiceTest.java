@@ -1,13 +1,16 @@
 package service; 
 import model.Ticket; 
+import service.FileService;
 import org.junit.jupiter.api.Test; 
 import org.junit.jupiter.api.io.TempDir; 
-
 import java.io.BufferedWriter; 
 import java.io.FileWriter;
-import java.io.IOException; 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path; 
 import java.util.List; 
+import static org.junit.jupiter.api.Assertions.*;
+
 
 import static org.junit.jupiter.api.Assertions.*; 
 
@@ -94,5 +97,48 @@ void sohranenieIZagruzkaBiletov_dolzhnyBytSovmestimy(@TempDir Path tempDir) thro
     assertEquals("Сколько будет 2+2?", loaded2.getQuestion());
     assertEquals("4", loaded2.getAnswer());
     assertEquals(List.of("4", "5", "6"), loaded2.getOptions()); 
+}
+
+@Test
+void loadTicketsFromMalformedFile_returnsEmptyList(@TempDir Path tempDir) throws IOException {
+    Path testFile = tempDir.resolve("malformed.txt");
+    
+    // Создаем битый файл (только вопрос без ответа)
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFile.toFile()))) {
+        writer.write("Вопрос без ответа");
+        // Нет ответа и вариантов
+    }
+    
+    FileService fileService = new FileService();
+    List<Ticket> tickets = fileService.loadTickets(testFile.toString());
+    
+    assertNotNull(tickets);
+    assertTrue(tickets.isEmpty()); // Игнорирует битые данные
+}
+
+@Test
+void saveTickets_createsCorrectFileFormat(@TempDir Path tempDir) throws IOException {
+    List<String> options = List.of("A", "B", "C");
+    Ticket ticket = new Ticket("Тест?", "A", options);
+    List<Ticket> tickets = List.of(ticket);
+    
+    Path testFile = tempDir.resolve("saved.txt");
+    FileService fileService = new FileService();
+    fileService.saveTickets(testFile.toString(), tickets);
+    
+    // Проверяем, что файл создался и содержит данные
+    assertTrue(Files.exists(testFile));
+    List<String> lines = Files.readAllLines(testFile);
+    assertTrue(lines.size() >= 5); // вопрос + ответ + 3 варианта + пустая строка
+    assertEquals("Тест?", lines.get(0).trim());
+}
+
+@Test
+void loadTickets_handlesEmptyFile_returnsEmptyList() {
+    FileService fileService = new FileService();
+    List<Ticket> tickets = fileService.loadTickets("nonexistent.txt");
+    
+    assertNotNull(tickets);
+    assertTrue(tickets.isEmpty());
 }
 }
