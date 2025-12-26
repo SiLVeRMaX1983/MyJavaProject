@@ -1,20 +1,23 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
 import model.Ticket;
 import model.TicketStatus;
 
 public class TicketService {
     private List<Ticket> tickets;
     private Random random;
+    private DataBaseService dbService;
 
     public TicketService(DataBaseService dbService) {
-    this.tickets = dbService.loadTickets(); 
-    this.random = new Random();
+        this.dbService = dbService;
+        this.tickets = dbService.loadTickets();
+        this.random = new Random();
     }
-
 
     public List<Ticket> getAllTickets() {
         return tickets;
@@ -45,7 +48,7 @@ public class TicketService {
         }
         int learned = 0;
         for (Ticket t : tickets) {
-            if (t.getStatus() == TicketStatus.LEARNED) {
+            if (t.getStatus() == TicketStatus.ВЫУЧЕНО) {
                 learned++;
             }
         }
@@ -55,15 +58,17 @@ public class TicketService {
     public void updateStatus(Ticket ticket, TicketStatus newStatus) {
         if (ticket != null) {
             ticket.setStatus(newStatus);
+            dbService.updateTicketStatus(ticket); 
         } else {
-            System.out.println("вам повезло, пустой билет");
+            System.out.println("Пустой билет");
         }
     }
 
-   public List<String> getAnswerOptions(Ticket ticket) {
-    List<String> options = new ArrayList<>(ticket.getOptions());
-    java.util.Collections.shuffle(options);
-    return options;
+    public List<String> getAnswerOptions(Ticket ticket) {
+        List<String> options = new ArrayList<>(ticket.getOptions());
+        Collections.shuffle(options);
+        return options;
+    }
 }
 
-}
+

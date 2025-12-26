@@ -1,6 +1,5 @@
 package model;
 
-import model.TicketStatus;
 import java.util.List;
 
 public class Ticket {
@@ -12,33 +11,28 @@ public class Ticket {
     public Ticket(String question, String answer) {
         this.question = question;
         this.answer = answer;
-        this.status = TicketStatus.REPEAT;
+        this.status = TicketStatus.ПОВТОРИТЬ;
     }
 
     public Ticket(String question, String answer, List<String> options) {
         this.question = question;
         this.answer = answer;
         this.options = options;
-        this.status = TicketStatus.REPEAT;
+        this.status = TicketStatus.ПОВТОРИТЬ;
     }
 
-    public String getQuestion() {
-        return question;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public TicketStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TicketStatus status) {
+    public Ticket(String question, String answer, List<String> options, TicketStatus status) {
+        this.question = question;
+        this.answer = answer;
+        this.options = options;
         this.status = status;
     }
 
-    public List<String> getOptions() {
-        return options;
-    }
+    public String getQuestion() { return question; }
+    public String getAnswer() { return answer; }
+    public TicketStatus getStatus() { return status; }
+    public void setStatus(TicketStatus status) { this.status = status; }
+    public List<String> getOptions() { return options; }
 }
+
+
