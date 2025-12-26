@@ -70,5 +70,3 @@ public class TicketService {
         return options;
     }
 }
-
-

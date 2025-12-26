@@ -121,7 +121,7 @@ public class ConsoleUI {
 
     private void showProgress() {
         double progress = ticketService.getProgress();
-        int bars = (int) (progress / 5); // 20 символов
+        int bars = (int) (progress / 5); 
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < 20; i++) sb.append(i < bars ? "█" : " ");
         sb.append("]");

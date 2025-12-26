@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.Ticket;
 import model.TicketStatus;
 
@@ -19,7 +18,6 @@ public class DataBaseService {
     private final String user = "root";
     private final String password = "Nikita208";
 
-    // Загрузка билетов из базы
     public List<Ticket> loadTickets() {
     List<Ticket> tickets = new ArrayList<>();
 
@@ -48,14 +46,12 @@ public class DataBaseService {
 
             int correctIndex = rs.getInt("correct_option") - 1;
             String correctAnswer = options.get(correctIndex);
-
-            // Получаем статус из базы с безопасным преобразованием
             String statusStr = rs.getString("status");
             TicketStatus status;
             try {
                 status = TicketStatus.valueOf(statusStr);
             } catch (IllegalArgumentException | NullPointerException e) {
-                status = TicketStatus.ПОВТОРИТЬ; // дефолтный статус
+                status = TicketStatus.ПОВТОРИТЬ; 
             }
 
             tickets.add(new Ticket(question, correctAnswer, options, status));
@@ -71,7 +67,7 @@ public class DataBaseService {
 }
 
 
-    // Обновление статуса билета в базе
+    
     public void updateTicketStatus(Ticket ticket) {
         String sql = "UPDATE questions SET status = ? WHERE question_text = ?";
         try (Connection conn = DriverManager.getConnection(url, user, password);
