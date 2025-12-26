@@ -10,10 +10,11 @@ public class TicketService {
     private List<Ticket> tickets;
     private Random random;
 
-    public TicketService(List<Ticket> tickets) {
-        this.tickets = tickets;
-        this.random = new Random();
+    public TicketService(DataBaseService dbService) {
+    this.tickets = dbService.loadTickets(); 
+    this.random = new Random();
     }
+
 
     public List<Ticket> getAllTickets() {
         return tickets;
@@ -59,10 +60,10 @@ public class TicketService {
         }
     }
 
-    // Новая функция — получение вариантов ответов для вопроса
-   public List<String> getAnswerOptions(Ticket ticket, int optionsCount) {
+   public List<String> getAnswerOptions(Ticket ticket) {
     List<String> options = new ArrayList<>(ticket.getOptions());
     java.util.Collections.shuffle(options);
     return options;
 }
+
 }

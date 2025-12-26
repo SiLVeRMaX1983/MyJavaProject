@@ -15,12 +15,11 @@ class FileServiceTest {
 
     @Test 
     void zagruzka_odbogo_bileta_i_ego_proverka(@TempDir Path tempDir) throws IOException {
-        // разобрать один билет
 
-        Path testFile = tempDir.resolve("tickets.txt"); //путь к файлу
+        Path testFile = tempDir.resolve("tickets.txt"); 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFile.toFile()))) {
            
-            writer.write("What is 2+2?"); //вопрос и 3 варианта ответа
+            writer.write("What is 2+2?"); 
             writer.newLine();             
 
             writer.write("4");           
@@ -35,19 +34,19 @@ class FileServiceTest {
             writer.newLine();            
         } 
 
-        FileService fileService = new FileService(); // Создаём экземпляр тестируемого класса
+        FileService fileService = new FileService();
 
-        List<Ticket> tickets = fileService.loadTickets(testFile.toString()); // Вызываем тестируемый метод
+        List<Ticket> tickets = fileService.loadTickets(testFile.toString()); 
 
-        assertEquals(1, tickets.size()); // Проверяем: прочитан ровно 1 билет
-        Ticket ticket = tickets.get(0);  // Берём первый (и единственный) билет
+        assertEquals(1, tickets.size());
+        Ticket ticket = tickets.get(0);  
 
-        assertEquals("What is 2+2?", ticket.getQuestion()); // Проверяем, что вопрос прочитан верно
+        assertEquals("What is 2+2?", ticket.getQuestion()); 
         assertEquals("4", ticket.getAnswer());              // Проверяем, что правильный ответ прочитан верно
 
-        List<String> options = ticket.getOptions(); // Получаем список вариантов ответа
-        assertNotNull(options);                     // Убеждаемся, что список не null
-        assertEquals(3, options.size());            // Проверяем, что вариантов ровно 3 
+        List<String> options = ticket.getOptions(); 
+        assertNotNull(options);                    
+        assertEquals(3, options.size());         
 
         assertEquals("4", options.get(0)); 
         assertEquals("5", options.get(1)); 
@@ -55,7 +54,7 @@ class FileServiceTest {
     }
 
     @Test
-    void proverka_pystogo_file_i_vernut_pustoi_spisok() {//попытка чтения несуществующего или пустого файла
+    void proverka_pystogo_file_i_vernut_pustoi_spisok() {
         FileService fileService = new FileService();//создали экземпляр
         List<Ticket> tickets = fileService.loadTickets("pystoi_file.txt");//вызвали метод к несуществующему файлу
         assertNotNull(tickets);//проверка, вернул объект, а не null 

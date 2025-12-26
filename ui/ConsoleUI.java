@@ -1,5 +1,4 @@
 package ui;
-
 import java.util.List;
 import java.util.Scanner;
 import model.Ticket;
@@ -40,12 +39,10 @@ public class ConsoleUI {
 
     System.out.println("Вопрос: " + random.getQuestion());
 
-    List<String> options = ticketService.getAnswerOptions(random);
+    List<String> options = ticketService.getAnswerOptions(random, 3);
     for (int i = 0; i < options.size(); i++) {
         System.out.println((i + 1) + ") " + options.get(i));
     }
-
-    // Проверка ответа пользователя
     int userAnswer = -1;
     while (true) {
         System.out.println("Введите номер вашего ответа:");
@@ -62,46 +59,17 @@ public class ConsoleUI {
         }
     }
 
-    String selectedAnswer = options.get(userAnswer - 1).trim();
-    String correctAnswer = random.getAnswer().trim();  
-
-    if (selectedAnswer.equals(correctAnswer)) {
-    System.out.println("Правильно!");
+    String selectedAnswer = options.get(userAnswer - 1);
+    if (selectedAnswer.equals(random.getAnswer())) {
+        System.out.println("Правильно!");
+        ticketService.updateStatus(random, TicketStatus.LEARNED);
     } else {
-    System.out.println("Неправильно.");
-    System.out.println("Правильный ответ: " + correctAnswer);
-        }
-
-
-    // Выбор статуса билета
-    System.out.println("Статус билета?\n1. Выучено\n2. Повторить\n3. Пропустить ");
-    int stat = -1;
-    while (true) {
-        String input = scanner.nextLine();
-        try {
-            stat = Integer.parseInt(input);
-            if (stat >= 1 && stat <= 3) {
-                break;
-            } else {
-                System.out.println("Введите 1, 2 или 3");
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Неверный ввод. Введите число.");
-        }
-    }
-
-    switch (stat) {
-        case 1:
-            ticketService.updateStatus(random, TicketStatus.LEARNED);
-            break;
-        case 2:
-            ticketService.updateStatus(random, TicketStatus.REPEAT);
-            break;
-        case 3:
-            ticketService.updateStatus(random, TicketStatus.NOT_STUDIED);
-            break;
+        System.out.println("Неправильно.");
+        System.out.println("Правильный ответ: " + random.getAnswer());
+        ticketService.updateStatus(random, TicketStatus.REPEAT);
     }
     break;
+
                 case 2:
                     System.out.println("=== Все билеты ===");
                     List<Ticket> all = ticketService.getAllTickets();
