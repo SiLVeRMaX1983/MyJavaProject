@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    archiveBaseName.set('MyCurseProject')
+    manifest {
+        attributes 'Main-Class': 'ui.App'
+    }
+}
+
+application {
+    mainClass = 'ui.App'
+}
+
+run {
+    // эта строка позволяет Scanner считывать ввод в интерактивном режиме через gradle run
+    standardInput = System.in
+}
+
+dependencies {
+    implementation 'com.mysql:mysql-connector-j:8.1.0'
+
+    testImplementation platform('org.junit:junit-bom:5.10.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.3'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+
